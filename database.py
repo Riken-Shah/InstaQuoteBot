@@ -12,12 +12,12 @@ class QuotesDatabase:
     -> FETCH
     """
 
-    def __init__(self):
+    def __init__(self, path_to_certificate):
         """
         Connecting to Firebase
         """
         # Fetch the service account key JSON file contents
-        cred = credentials.Certificate('intagram-bot-firebase-adminsdk-slaoe-3e8bc1ca0a.json')
+        cred = credentials.Certificate(path_to_certificate)
 
         # Initialize the app with a service account, granting admin privileges
         firebase_admin.initialize_app(cred)
@@ -32,8 +32,8 @@ class QuotesDatabase:
         except Exception as e:
             print(f'Error occurred while checking this quote -> {quote}, \n Error -> {e}')
             return False
-        for q in quotes:
-            return quote
+        for _ in quotes:
+            return True
         return False
 
     # Add [quote, author] to our db
@@ -53,9 +53,9 @@ class QuotesDatabase:
         return False
 
     # Add list of quotes
-    def add_list(self, quotes: list):
+    def add_list(self, quotes: list, quote_key='quote', author_key='author'):
         for quote in quotes:
-            self.add_single(**quote)
+            self.add_single(quote=quote[quote_key], author=quote[author_key])
         return True
 
     # Fetch the new quote
