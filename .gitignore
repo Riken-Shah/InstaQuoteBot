@@ -1,1 +1,11 @@
+# Virtual env
 /env/
+
+# Test
+test1.py
+
+# Idea
+.idea/*
+
+# Service Key
+/intagram-bot-firebase*.json
