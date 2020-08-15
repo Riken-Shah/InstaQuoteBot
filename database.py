@@ -59,14 +59,14 @@ class QuotesDatabase:
         return True
 
     # Fetch the new quote
-    def fetch_quote(self):
+    def fetch_quote(self, for_test=False):
         """
         If no quotes are left in db it then it will return false
         :return quote or False:
         """
         quotes = self.db.where(u'used_on_insta', u'==', False).stream()
         for quote in quotes:
-            self.db.document(quote.id).update({u'used_on_insta': True})
+            self.db.document(quote.id).update({u'used_on_insta': not for_test})
             quote = quote.to_dict()
             return {'quote': quote['quote'], 'author': quote['author']}
         return False
