@@ -45,19 +45,6 @@ class QuotesDatabase:
             return False
         return True
 
-    # Add single quote
-    def add_single(self, quote: str, author: str):
-        if not self.__check_quote_exist(quote):
-            self.__add_quote(quote, author)
-            return True
-        return False
-
-    # Add list of quotes
-    def add_list(self, quotes: list, quote_key='quote', author_key='author'):
-        for quote in quotes:
-            self.add_single(quote=quote[quote_key], author=quote[author_key])
-        return True
-
     # Fetch the new quote
     def fetch_quote(self, for_test=False):
         """

@@ -12,3 +12,6 @@ test1.py
 
 # Cache
 **/__pycache__/
+
+# TinyDB
+/Database/quotes_data.json
