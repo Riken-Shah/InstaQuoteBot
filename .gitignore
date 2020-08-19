@@ -15,3 +15,6 @@ test1.py
 
 # TinyDB
 /Database/quotes_data.json
+
+# Secret Information
+**/secrets.py
