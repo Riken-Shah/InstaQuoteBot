@@ -26,8 +26,11 @@ class Template(InstaPost):
 
         # Write Quote and Author in Image
         text_box = (self.__get_percentage_of_size(0), (self._size[0] - margin_bottom - 50, self._size[1]))
-        self.write_text(img, text_box, self.quote, font_color=font_color, top_bottom_padding=50, font_size=200,
-                        font_path='/Library/Fonts/Ovo-Regular.ttf', max_top_bottom_padding=0)
+        did_write = self.write_text(img, text_box, self.quote, font_color=font_color, top_bottom_padding=50,
+                                    font_size=200,
+                                    font_path='/Library/Fonts/Ovo-Regular.ttf', max_top_bottom_padding=0)
+        if not did_write:
+            return False
 
         # Draw Line
         line_coords = ((0, self._size[1] - margin_bottom), (self._size[0], self._size[1] - margin_bottom))
@@ -36,11 +39,13 @@ class Template(InstaPost):
 
         # Write Author
         author_text = ((0, self._size[1] - margin_bottom / 100 * 70), (self._size[0], self._size[1]))
-        print(self.quote)
-        self.write_text(img, author_text,
-                        text=self.author or 'Anonymous', font_size=50, font_color=font_color,
-                        font_path='/Library/Fonts/Ovo-Regular.otf',
-                        need_checking=False)
+        did_write = self.write_text(img, author_text,
+                                    text=self.author or 'Anonymous', font_size=50, font_color=font_color,
+                                    font_path='/Library/Fonts/Ovo-Regular.otf',
+                                    need_checking=False)
+        if not did_write:
+            return False
+
         return img
 
     # Update
@@ -58,8 +63,8 @@ class Template(InstaPost):
         last = None
         for i in ran:
             if ran.index(i) % 2 == 0 and last:
-                first_color = tuple(map(lambda x: x/255, getrgb(last)))
-                last_color = tuple(map(lambda x: x/255, getrgb(i)))
+                first_color = tuple(map(lambda x: x / 255, getrgb(last)))
+                last_color = tuple(map(lambda x: x / 255, getrgb(i)))
                 is_passed = contrast.passes_AA(contrast.rgb(first_color, last_color))
                 if is_passed:
                     return {'font_color': i, 'bg_color': last, 'line_color': ran[2]}

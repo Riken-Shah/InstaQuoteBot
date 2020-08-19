@@ -39,13 +39,13 @@ class InstaPost(Tinydb):
         clean_text = ['']
         word = ''
         count = 0
-        for i in text:
-            word += i
-            if i == ' ' or i == '.' or i == ',' or i == '-' or len(text) - 1 == text.index(i) and word:
+        for i in range(len(text)):
+            word += text[i]
+            if text[i] == ' ' or text[i] == '.' or text[i] == ',' or text[i] == '-' or len(text) - 1 == i and word:
                 if len(clean_text[count]) + len(word) > max_char_in_sentence:
                     count += 1
                     clean_text.append('')
-                clean_text[count] += word
+                clean_text[count] += word.lstrip()
                 word = ''
         # Cleaning
         for text_block in clean_text:
@@ -61,7 +61,6 @@ class InstaPost(Tinydb):
         fnt = ImageFont.truetype(font_path, font_size)
         draw = ImageDraw.Draw(img)
         margin = None
-
         for text in texts:
             draw.text((x + side_padding / 2, y), text, font=fnt, fill=font_color)
             _, h = fnt.getsize(text)
@@ -114,7 +113,7 @@ class InstaPost(Tinydb):
         return int(height / (f_height + top_bottom_padding))
 
     def __get_max_chars(self, text, font_size, max_width, max_chars=50):
-        max_width -= 200
+        max_width -= 50
         while True:
             text = text[:max_chars]
             font = ImageFont.truetype(self.default_font, size=font_size)
