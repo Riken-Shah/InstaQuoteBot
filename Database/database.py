@@ -3,15 +3,16 @@ class Database:
     This class is basic template to integrate with the diffrent
     Database
     """
+    for_test = False
 
     # Check if quote exist
-    def __check_quote_exist(self, quote):
+    def _check_quote_exist(self, quote):
         """
         Overwrite this function to return if the quote exist in db
         """
 
     # Add [quote, author] to our db
-    def __add_quote(self, quote: str, author: str):
+    def _add_quote(self, quote: str, author: str):
         """
         Overwrite this function to add quote in db
         """
@@ -19,8 +20,8 @@ class Database:
 
     # Add single quote
     def add_single(self, quote: str, author: str):
-        if not self.__check_quote_exist(quote):
-            self.__add_quote(quote, author)
+        if not self._check_quote_exist(quote):
+            self._add_quote(quote, author)
             return True
         return False
 
@@ -31,7 +32,7 @@ class Database:
         return True
 
     # Fetch Quote and Author from db
-    def fetch_quote(self, for_test=False):
+    def fetch_quote(self):
         """
         Overwrite this function to return a quote and the update it used_on_insta = True
         """
