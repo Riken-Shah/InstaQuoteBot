@@ -1,9 +1,11 @@
-from PIL import  ImageDraw, ImageFont
-from database import QuotesDatabase
+from PIL import ImageDraw, ImageFont
+from Database.tinyDb import QuotesDatabase as Tinydb
 
 
-class InstaPost(QuotesDatabase):
+class InstaPost(Tinydb):
     """
+    *This class expects an database object
+
     This class has a base class which has base function to
     create instagram post like writing responsive text, generating
     quotes and author.
@@ -14,10 +16,15 @@ class InstaPost(QuotesDatabase):
     __font_size_smallest = 30
     __padding_top_bottom_smallest = 20
 
-    def __init__(self):
-        super().__init__('/Volumes/Samsung USB/PycharmProjects/IntagramBot/intagram-bot-firebase-adminsdk-slaoe'
-                         '-3e8bc1ca0a.json')
-        res = self.fetch_quote(for_test=True)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.quote = None
+        self.author = None
+        self.fetch_new()
+
+    # Fetch New Quotes and Authors
+    def fetch_new(self):
+        res = self.fetch_quote()
         self.quote = res['quote']
         self.author = res['author']
 
@@ -29,21 +36,21 @@ class InstaPost(QuotesDatabase):
         :param max_char_in_sentence: Max number of chars in a sentence
         :return: list of sentence
         """
-        clean_text = []
+        clean_text = ['']
+        word = ''
         count = 0
-        sentence = ''
-        is_word = False
-
-        for i in range(len(text)):
-            if count >= max_char_in_sentence and is_word:
-                clean_text.append(sentence)
-                count = 0
-                sentence = ''
-            count += 1
-            sentence += text[i]
-            is_word = text[i] == ' ' or text[i] == '.'
-        clean_text.append(sentence)
-
+        for i in text:
+            word += i
+            if i == ' ' or i == '.' or i == ',' or i == '-' or len(text) - 1 == text.index(i) and word:
+                if len(clean_text[count]) + len(word) > max_char_in_sentence:
+                    count += 1
+                    clean_text.append('')
+                clean_text[count] += word
+                word = ''
+        # Cleaning
+        for text_block in clean_text:
+            if not text_block:
+                del clean_text[clean_text.index(text_block)]
         return clean_text
 
     # Set the text in Image
@@ -65,7 +72,8 @@ class InstaPost(QuotesDatabase):
 
             y += margin
 
-    def write_text(self, img, xy, text, font_size=70, top_bottom_padding=30, side_padding=50, need_checking=True, **kwargs):
+    def write_text(self, img, xy, text, font_size=70, top_bottom_padding=30, side_padding=50, need_checking=True,
+                   **kwargs):
         # Get the height and width of the text box
         height, width = self.__get_width_and_height(xy)
         max_chars = None
@@ -74,7 +82,7 @@ class InstaPost(QuotesDatabase):
             max_lines = self.__get_max_lines(text, height, font_size, top_bottom_padding)
 
             # Get the max chars in a line
-            max_chars = self.__get_max_chars(text, font_size, max_width=width - side_padding / 100 * 50)
+            max_chars = self.__get_max_chars(text, font_size, max_width=width - side_padding / 100 * 0)
 
             # Wrap the text
             text_wrapper = self._clean_quote(text, max_chars)
@@ -89,7 +97,7 @@ class InstaPost(QuotesDatabase):
                 return False
 
             if top_bottom_padding >= self.__padding_top_bottom_smallest:
-                top_bottom_padding -= 5
+                top_bottom_padding -= 2
 
         if not need_checking:
             max_chars = 50
@@ -103,10 +111,10 @@ class InstaPost(QuotesDatabase):
     def __get_max_lines(self, text, height, font_size, top_bottom_padding):
         font = ImageFont.truetype(self.default_font, size=font_size)
         _, f_height = font.getsize(text)
-
         return int(height / (f_height + top_bottom_padding))
 
     def __get_max_chars(self, text, font_size, max_width, max_chars=50):
+        max_width -= 200
         while True:
             text = text[:max_chars]
             font = ImageFont.truetype(self.default_font, size=font_size)
@@ -114,7 +122,7 @@ class InstaPost(QuotesDatabase):
             if f_width <= max_width:
                 break
             max_chars -= 1
-        return 1 if max_chars - 5 < 0 else max_chars - 5
+        return 1 if max_chars - 1 < 0 else max_chars - 1
 
     @staticmethod
     def __get_width_and_height(xy):

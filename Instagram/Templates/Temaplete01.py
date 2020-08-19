@@ -2,16 +2,18 @@ from Instagram.InstaPost import InstaPost
 from PIL.ImageColor import getcolor, getrgb
 from PIL.ImageOps import grayscale
 from PIL import Image, ImageDraw
+import randomcolor
+import wcag_contrast_ratio as contrast
 
 
 class Template(InstaPost):
-    def __init__(self, font_color: str = None, bg_color: str = None):
+    def __init__(self, font_color: str = None, bg_color: str = None, *args, **kwargs):
         """
         This class returns an instagram post with simplistic amazing design
         """
-        super().__init__()
+        super().__init__(*args, **kwargs)
         if not font_color and not bg_color:
-            self.theme_color = self.__generate_a_theme_color()
+            self.theme_color = self._generate_a_theme_color()
         else:
             self.theme_color = {'font_color': font_color, 'bg_color': bg_color}
 
@@ -29,25 +31,41 @@ class Template(InstaPost):
 
         # Draw Line
         line_coords = ((0, self._size[1] - margin_bottom), (self._size[0], self._size[1] - margin_bottom))
-        draw.line(line_coords, fill='#988978',
+        draw.line(line_coords, fill=self.theme_color['line_color'],
                   width=7)
 
         # Write Author
         author_text = ((0, self._size[1] - margin_bottom / 100 * 70), (self._size[0], self._size[1]))
+        print(self.quote)
         self.write_text(img, author_text,
-                        text=self.author, font_size=50, font_color=font_color,
+                        text=self.author or 'Anonymous', font_size=50, font_color=font_color,
                         font_path='/Library/Fonts/Ovo-Regular.otf',
                         need_checking=False)
         return img
+
+    # Update
+    def update_everything(self):
+        self.fetch_new()
+        self.theme_color = self._generate_a_theme_color()
 
     # Return A Basic Template
     def __generate_template(self):
         return Image.new('RGB', self._size, color=self.theme_color['bg_color'])
 
     # Returns A Random Theme Color For The Post
-    @staticmethod
-    def __generate_a_theme_color():
-        return {'font_color': '#312922', 'bg_color': '#FEE1C6'}
+    def _generate_a_theme_color(self):
+        ran = randomcolor.RandomColor().generate(count=20)
+        last = None
+        for i in ran:
+            if ran.index(i) % 2 == 0 and last:
+                first_color = tuple(map(lambda x: x/255, getrgb(last)))
+                last_color = tuple(map(lambda x: x/255, getrgb(i)))
+                is_passed = contrast.passes_AA(contrast.rgb(first_color, last_color))
+                if is_passed:
+                    return {'font_color': i, 'bg_color': last, 'line_color': ran[2]}
+            else:
+                last = i
+        return self._generate_a_theme_color()
 
     # Takes an Img Object and return a tint image
     @staticmethod
