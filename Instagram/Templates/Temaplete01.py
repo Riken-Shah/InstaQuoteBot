@@ -67,7 +67,11 @@ class Template(InstaPost):
                 last_color = tuple(map(lambda x: x / 255, getrgb(i)))
                 is_passed = contrast.passes_AA(contrast.rgb(first_color, last_color))
                 if is_passed:
-                    return {'font_color': i, 'bg_color': last, 'line_color': ran[2]}
+                    # To give lighter color to font
+                    if i[0] + i[1] + i[2] > last[0] + last[1] + last[2]:
+                        return {'font_color': last, 'bg_color': i, 'line_color': last}
+                    else:
+                        return {'font_color': i, 'bg_color': last, 'line_color': i}
             else:
                 last = i
         return self._generate_a_theme_color()
