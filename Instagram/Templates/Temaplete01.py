@@ -1,4 +1,4 @@
-from Instagram.InstaPost import InstaPost
+from Instagram.Templates.InstaPost import InstaPost
 from PIL.ImageColor import getcolor, getrgb
 from PIL.ImageOps import grayscale
 from PIL import Image, ImageDraw
