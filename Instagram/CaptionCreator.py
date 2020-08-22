@@ -1,13 +1,15 @@
 from mediawiki import MediaWiki
 from mediawiki.exceptions import PageError
 import random
+from requests.exceptions import ReadTimeout
+from requests.exceptions import ConnectionError
 
 
 class BasicCaption:
     def __init__(self, page_name='bot.quote'):
         self.author = None
         self.page_name = page_name
-        self.wikipedia = MediaWiki()
+        self.wikipedia = MediaWiki(timeout=20)
         self.__max_chars = 2200
         self.__hashtag_limit = 30
         self.__username_limit = 30
@@ -19,22 +21,31 @@ class BasicCaption:
         self.author = author
         caption = f' 👉 A Beautiful Quote By #{self.author.title().replace(" ", "")} 👈. '
         caption += f'Follow my 👉 @{self.page_name} 👈 for more inspirational quote 🙇‍ like this.️'.strip()
-        caption += self.__call_to_action()
-
-        page = self.__get_request()
-        if not page:
-            return caption
-        # Adding Space
-        caption += self.__add_space(2)
-        # Adding author summary
-        caption += page.summarize(chars=800)
-        # Adding space
-        caption += self.__add_space(4)
-        # Adding Wikipedia link
-        caption += f' Read more on {page.url}'
-        # Adding space
-        caption += self.__add_space(3)
-        caption += self.__hashtags()
+        if author != 'Anonymous':
+            try:
+                page = self.__get_request()
+            except ReadTimeout:
+                try:
+                    page = self.__get_request()
+                except ReadTimeout:
+                    caption += self.__add_space(3)
+                    return caption + self.__hashtags()
+            if not page:
+                caption += self.__add_space(3)
+                return caption + self.__hashtags()
+            # Adding Call to action
+            caption += self.__call_to_action()
+            # Adding Space
+            caption += self.__add_space(2)
+            # Adding author summary
+            caption += page.summarize(chars=400)
+            # Adding space
+            caption += self.__add_space(4)
+            # Adding Wikipedia link
+            caption += f' Read more on {page.url}'
+            # Adding space
+            caption += self.__add_space(3)
+            caption += self.__hashtags()
         return caption
 
     @staticmethod
@@ -51,9 +62,7 @@ class BasicCaption:
     def __hashtags():
         return '#quote #quoteoftheday #quotes #quotestagram #quotesindonesia #quotestoliveby #quotesaboutlife ' \
                '#quotesdaily #lovequotes #motivationalquotes #quotesoftheday #quoted #quotesgalau ' \
-               '#inspirationalquotes #quotestags #quotesandsayings #quotescinta #quoteskeren #quotestoinspire ' \
-               '#quotesgram #gujjuquotes #quotesforlife #quotesofinstagram #lifequotes #successquotes ' \
-               '#motivationalquote #instaquote #instaquotes #positivequotes #dailyquotes '
+               '#inspirationalquotes #quotestags #quotesandsayings #quotescinta #quoteskeren #quotestoinspire '
 
     @staticmethod
     def __call_to_action():
@@ -75,7 +84,7 @@ class BasicCaption:
         response = None
         try:
             response = self.wikipedia.page(self.__clean_author())
-        except PageError:
+        except (PageError, ConnectionError):
             pass
 
         return response

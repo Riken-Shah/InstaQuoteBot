@@ -26,7 +26,7 @@ class InstaPost(Tinydb):
     def fetch_new(self):
         res = self.fetch_quote()
         self.quote = res['quote']
-        self.author = res['author']
+        self.author = res['author'] or 'Anonymous'
 
     # Clean the Text
     @staticmethod
