@@ -1,7 +1,7 @@
 from Database.database import Database
 from tinydb import TinyDB, Query
 from datetime import datetime
-from secrets import tiny_db_path_to_db
+from env__ import tiny_db_path_to_db
 
 
 class QuotesDatabase(TinyDB, Database):

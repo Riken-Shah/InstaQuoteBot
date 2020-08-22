@@ -17,7 +17,7 @@ test1.py
 /Database/quotes_data.json
 
 # Secret Information
-**/secrets.py
+**/env__.py
 
 # Insta Post Test
 /Instagram/Test/**

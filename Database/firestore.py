@@ -3,7 +3,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from datetime import datetime
 from Database.database import Database
-from secrets import firestore_path_to_certificate
+from env__ import firestore_path_to_certificate
 
 
 class QuotesDatabase(Database):
