@@ -40,7 +40,7 @@ class Template(InstaPost):
         # Write Author
         author_text = ((0, self._size[1] - margin_bottom / 100 * 70), (self._size[0], self._size[1]))
         did_write = self.write_text(img, author_text,
-                                    text=self.author or 'Anonymous', font_size=50, font_color=font_color,
+                                   text=self.author, font_size=50, font_color=font_color,
                                     font_path='/Library/Fonts/Ovo-Regular.otf',
                                     need_checking=False)
         if not did_write:
