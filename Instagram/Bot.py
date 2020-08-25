@@ -6,7 +6,7 @@ from selenium.webdriver.common.keys import Keys
 import subprocess
 
 
-class Post:
+class Bot:
     def __init__(self, testing=False):
         self.img_path = ''
         self.caption = None
@@ -20,6 +20,8 @@ class Post:
                                   options=options)
         driver.get("https://www.instagram.com")
         sleep(3)
+        if testing:
+            self.driver = driver
         self.__driver = driver
         # Logging In
         self.__login()
@@ -36,14 +38,27 @@ class Post:
         self.close_notification()
         self.close_add_to_home()
         sleep(2)
-        self.__upload_a_file()
+        self.__upload_a_file('//*[@id="react-root"]/section/nav[2]/div/div/form/input')
         sleep(6)
         self.close_notification()
         self.__final_process()
         sleep(3)
         self.close_notification()
-        self.img_path = os.path.abspath(os.getcwd()) + '/'
-        self.caption = None
+
+    def story(self, img_path: str):
+        self.img_path = img_path
+        self.close_notification()
+        sleep(2)
+        self.close_add_to_home()
+        sleep(2)
+        self.__driver.find_element_by_css_selector("svg[aria-label='New Story']").click()
+        sleep(2)
+        self.__upload_a_file('//*[@id="react-root"]/section/nav[1]/div/div/form/input')
+        sleep(4)
+        self.__driver.find_element_by_xpath("//span[contains(text(),'Add to your story')]").click()
+        sleep(5)
+
+
 
     def __login(self):
         sleep(10)
@@ -82,12 +97,12 @@ class Post:
         except:
             pass
 
-    def __upload_a_file(self):
-        # New Post Button
+    def __upload_a_file(self, input_path: str):
+        # New Bot Button
         self.__driver.find_element_by_xpath("//div[@role='menuitem']").click()
         sleep(2)
         # File Input Button
-        self.__driver.find_element_by_xpath('//*[@id="react-root"]/section/nav[2]/div/div/form/input')\
+        self.__driver.find_element_by_xpath(input_path)\
             .send_keys(self.img_path)
         sleep(2)
 
@@ -109,5 +124,3 @@ class Post:
     def exit(self):
         self.__driver.quit()
         return True
-
-
