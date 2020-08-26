@@ -2,22 +2,28 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 from datetime import datetime
+from Database.database import Database
+import os
 
 
-class QuotesDatabase:
+class QuotesDatabase(Database):
     """
     This class manages our quote database
     It provides following methods:
     -> ADD
     -> FETCH
     """
+    path_to_certificate = os.getenv('firestore_path_to_certificate')
+    if not path_to_certificate:
+        raise ValueError('You have to giver firestore_path_to_certificate to .env file')
 
-    def __init__(self, path_to_certificate):
+    def __init__(self, test_mode=False):
         """
         Connecting to Firebase
         """
         # Fetch the service account key JSON file contents
-        cred = credentials.Certificate(path_to_certificate)
+        super().__init__(test_mode)
+        cred = credentials.Certificate(self.path_to_certificate)
 
         # Initialize the app with a service account, granting admin privileges
         firebase_admin.initialize_app(cred)
@@ -26,7 +32,7 @@ class QuotesDatabase:
         self.db = firestore.client().collection(u'quotes')
 
     # Check if quote exist
-    def __check_quote_exist(self, quote):
+    def _check_quote_exist(self, quote):
         try:
             quotes = self.db.where(u'quote', u'==', quote).stream()
         except Exception as e:
@@ -37,25 +43,13 @@ class QuotesDatabase:
         return False
 
     # Add [quote, author] to our db
-    def __add_quote(self, quote: str, author: str):
+    def _add_quote(self, quote: str, author: str):
         try:
-            self.db.document().set({'quote': quote, 'author': author, 'used_on_insta': False, 'timestamp': datetime.now()})
+            self.db.document().set(
+                {'quote': quote, 'author': author, 'used_on_insta': False, 'timestamp': datetime.now()})
         except Exception as e:
             print(f'Error occurred while adding this quote -> {quote}, \n Error -> {e}')
             return False
-        return True
-
-    # Add single quote
-    def add_single(self, quote: str, author: str):
-        if not self.__check_quote_exist(quote):
-            self.__add_quote(quote, author)
-            return True
-        return False
-
-    # Add list of quotes
-    def add_list(self, quotes: list, quote_key='quote', author_key='author'):
-        for quote in quotes:
-            self.add_single(quote=quote[quote_key], author=quote[author_key])
         return True
 
     # Fetch the new quote
@@ -66,11 +60,7 @@ class QuotesDatabase:
         """
         quotes = self.db.where(u'used_on_insta', u'==', False).stream()
         for quote in quotes:
-            self.db.document(quote.id).update({u'used_on_insta': True})
+            self.db.document(quote.id).update({u'used_on_insta': not self.for_test})
             quote = quote.to_dict()
             return {'quote': quote['quote'], 'author': quote['author']}
         return False
-
-
-
-

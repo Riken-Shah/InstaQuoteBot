@@ -9,3 +9,19 @@ test1.py
 
 # Service Key
 /intagram-bot-firebase*.json
+
+# Cache
+**/__pycache__/
+
+# TinyDB
+/Database/quotes_data.json
+
+# Secret Information
+**/.env
+
+# Insta Post Test
+/Instagram/Test/**
+
+# VS Code
+/.vscode/**
+
