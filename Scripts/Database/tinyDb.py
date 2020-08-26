@@ -1,4 +1,4 @@
-from Database.database import Database
+from Scripts.Database.database import Database
 from tinydb import TinyDB, Query
 from datetime import datetime
 import os

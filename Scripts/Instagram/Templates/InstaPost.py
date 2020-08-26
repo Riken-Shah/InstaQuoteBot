@@ -1,5 +1,5 @@
 from PIL import ImageDraw, ImageFont
-from Database.tinyDb import QuotesDatabase
+from Scripts.Database.tinyDb import QuotesDatabase
 
 
 class InstaPost(QuotesDatabase):

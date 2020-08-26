@@ -1,5 +1,5 @@
-from AddQuotes.add_quotes_from_api import AddFromApi
-from Database.tinyDb import QuotesDatabase
+from Scripts.AddQuotes.add_quotes_from_api import AddFromApi
+from Scripts.Database.tinyDb import QuotesDatabase
 
 
 class QuotesTinyDb(AddFromApi):

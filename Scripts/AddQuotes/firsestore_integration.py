@@ -1,5 +1,5 @@
-from AddQuotes.add_quotes_from_api import AddFromApi
-from Database.firestore import QuotesDatabase
+from Scripts.AddQuotes.add_quotes_from_api import AddFromApi
+from Scripts.Database.firestore import QuotesDatabase
 
 
 class FireStoreIntegration(AddFromApi):

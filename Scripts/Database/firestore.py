@@ -2,7 +2,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 from datetime import datetime
-from Database.database import Database
+from Scripts.Database.database import Database
 import os
 
 
