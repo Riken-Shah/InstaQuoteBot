@@ -1,8 +1,8 @@
 from PIL import ImageDraw, ImageFont
-from Database.tinyDb import QuotesDatabase as Tinydb
+from Database.tinyDb import QuotesDatabase
 
 
-class InstaPost(Tinydb):
+class InstaPost(QuotesDatabase):
     """
     *This class expects an database object
 
@@ -10,23 +10,27 @@ class InstaPost(Tinydb):
     create instagram post like writing responsive text, generating
     quotes and author.
     """
-    # Default Instagram Post Size
-    _size = (1080, 1080)
-    default_font = '/Library/Fonts/AppleMyungjo.ttf'
-    __font_size_smallest = 30
-    __padding_top_bottom_smallest = 20
-
     def __init__(self, *args, **kwargs):
+        # Default Instagram Post Size
+        self._size = (1080, 1080)
+        self.default_font = '/Library/Fonts/AppleMyungjo.ttf'
+        self.__font_size_smallest = 30
+        self.__padding_top_bottom_smallest = 20
+
         super().__init__(*args, **kwargs)
         self.quote = None
         self.author = None
         self.fetch_new()
+        if not self.quote or not self.author:
+            raise ValueError('Quote or Author Not Found')
 
     # Fetch New Quotes and Authors
     def fetch_new(self):
         res = self.fetch_quote()
-        self.quote = res['quote']
-        self.author = res['author'] or 'Anonymous'
+        if res:
+            self.quote = res['quote']
+            self.author = res['author'] or 'Anonymous'
+        return False
 
     # Clean the Text
     @staticmethod
@@ -54,10 +58,10 @@ class InstaPost(Tinydb):
         return clean_text
 
     # Set the text in Image
-    @staticmethod
-    def __set_text_in_image(img, x: int, y: int, texts: list, side_padding=50, top_bottom_padding=80,
-                            font_path=default_font, font_size=50, font_color=(0, 0, 0), max_top_bottom_padding=None):
-
+    def __set_text_in_image(self, img, x: int, y: int, texts: list, side_padding=50, top_bottom_padding=80,
+                            font_path=None, font_size=50, font_color=(0, 0, 0), max_top_bottom_padding=None):
+        if not font_path:
+            font_path = self.default_font
         fnt = ImageFont.truetype(font_path, font_size)
         draw = ImageDraw.Draw(img)
         margin = None
