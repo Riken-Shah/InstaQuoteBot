@@ -17,10 +17,11 @@ test1.py
 /Database/quotes_data.json
 
 # Secret Information
-**/env__.py
+**/.env
 
 # Insta Post Test
 /Instagram/Test/**
 
 # VS Code
 /.vscode/**
+

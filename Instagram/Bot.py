@@ -1,7 +1,6 @@
 import os
 from time import sleep
 from selenium import webdriver
-from env__ import username, password, chrome_exec_path
 from selenium.webdriver.common.keys import Keys
 import subprocess
 
@@ -16,7 +15,7 @@ class Bot:
         options.add_experimental_option("detach", True)
         options.add_experimental_option("mobileEmulation", {"deviceName": "Pixel 2"})
 
-        driver = webdriver.Chrome(executable_path=chrome_exec_path,
+        driver = webdriver.Chrome(executable_path=os.getenv('chrome_exec_path'),
                                   options=options)
         driver.get("https://www.instagram.com")
         sleep(3)
@@ -31,6 +30,14 @@ class Bot:
         self.close_notification()
         self.close_add_to_home()
         sleep(4)
+
+    @staticmethod
+    def __get_credentials():
+        username = os.getenv('username')
+        password = os.getenv('password')
+        if not username or not password:
+            raise ValueError('Username or Password value is not set in .env file')
+        return username, password
 
     def post(self, img_path: str, caption: str):
         self.img_path = img_path
@@ -58,9 +65,8 @@ class Bot:
         self.__driver.find_element_by_xpath("//span[contains(text(),'Add to your story')]").click()
         sleep(5)
 
-
-
     def __login(self):
+        username, password = self.__get_credentials()
         sleep(10)
         login_button = self.__driver.find_element_by_xpath("//button[contains(text(),'Log In')]")
         login_button.click()

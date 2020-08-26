@@ -3,7 +3,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from datetime import datetime
 from Database.database import Database
-from env__ import firestore_path_to_certificate
+import os
 
 
 class QuotesDatabase(Database):
@@ -13,7 +13,9 @@ class QuotesDatabase(Database):
     -> ADD
     -> FETCH
     """
-    path_to_certificate = firestore_path_to_certificate
+    path_to_certificate = os.getenv('firestore_path_to_certificate')
+    if not path_to_certificate:
+        raise ValueError('You have to giver firestore_path_to_certificate to .env file')
 
     def __init__(self, test_mode=False):
         """
