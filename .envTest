@@ -1,0 +1,15 @@
+# -> Remember path should be absolute.
+# -> After changing the value rename file to .env.
+
+# Firestore Path to Certificate
+firestore_path_to_certificate='path to firestore certificate'
+
+# TinyDB path to json file
+tiny_db_path_to_db='path to tiny db database' # ../db.json
+
+# Instagram Credentials
+username='instagram username'
+password='instagram password'
+
+# Chrome Exec Path
+chrome_exec_path='chrome driver executable path'
