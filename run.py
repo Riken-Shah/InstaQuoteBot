@@ -1,6 +1,6 @@
 import os
 import logging
-from create_post import CreatePost
+from Scripts.create_post import CreatePost
 import schedule
 
 if __name__ == '__main__':
