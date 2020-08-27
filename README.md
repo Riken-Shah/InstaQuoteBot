@@ -3,7 +3,7 @@
 Instagram Quote Page which is handled by a Bot.
 
 ## Installation
-Follow this below instruction to properly set up the project
+Follow this below instruction to properly set up this project
 
 ## Step 1
 
@@ -16,9 +16,13 @@ git clone https://github.com/Riken-Shah/InstaQuoteBot.git
 ## Step 2
 Download the dependices\
 Make sure you are in your project directory
-
+For Windows User
 ```python
-pip install requirements.txt 
+pip -r install requirements.txt 
+```
+For Mac User
+```python
+pip3 -r install requirements.txt 
 ```
 
 ## Step 3
