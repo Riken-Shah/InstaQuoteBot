@@ -25,4 +25,9 @@ quotes_data.json
 # VS Code
 /.vscode/**
 
+# Log File
+app.log
+
+# Image Path
+post.png
 
