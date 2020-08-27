@@ -19,6 +19,9 @@ class QuotesDatabase(Database):
 
     # Check if quote exist
     def _check_quote_exist(self, quote):
+        """
+        Check is some quote exists
+        """
         quotes = self.db.search(self.query.quote == quote)
         for _ in quotes:
             return True
@@ -26,6 +29,10 @@ class QuotesDatabase(Database):
 
     # Add [quote, author] to our db
     def _add_quote(self, quote: str, author: str):
+        """
+        Add single quote to the db
+        """
+
         try:
             self.db.insert({'quote': quote, 'author': author, 'used_on_insta': False, 'timestamp': str(datetime.now())})
         except Exception as e:

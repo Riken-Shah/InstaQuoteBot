@@ -17,6 +17,13 @@ class CreatePost:
         logging.info('Created a Selenium Instance')
 
     def create(self, img_path, counter=0):
+        """
+        Create a Quote Post with the caption and post it on instagram
+        :param img_path: Image Path
+        :param counter: You don't need to pass this, it is used
+        to avoid infinite recursion
+        :return: Boolean Type (True) if image is successfully posted
+        """
         did_create = self.template.generate_post()
         if did_create:
             did_create.save(img_path)
