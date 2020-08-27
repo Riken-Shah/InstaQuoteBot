@@ -15,7 +15,7 @@ git clone https://github.com/Riken-Shah/InstaQuoteBot.git
 
 ## Step 2
 Download the dependices\
-Make sure you are in your project directory
+Make sure you are in your project directory\
 For Windows User
 ```python
 pip -r install requirements.txt 
@@ -33,7 +33,7 @@ Follow the instruction on this [file](.envTest)\
 
 ## Final Step
 
-🎉   **Let's power up the bot...**  🎉  
+🎉   **Let's power up the bot...**  🎉 \
 For Windows Users
 ```bash
 python run.py
