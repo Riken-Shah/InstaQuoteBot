@@ -14,14 +14,20 @@ test1.py
 **/__pycache__/
 
 # TinyDB
-/Database/quotes_data.json
+quotes_data.json
 
 # Secret Information
 **/.env
 
 # Insta Post Test
-/Instagram/Test/**
+/Scripts/Instagram/Test/**
 
 # VS Code
 /.vscode/**
+
+# Log File
+app.log
+
+# Image Path
+post.png
 

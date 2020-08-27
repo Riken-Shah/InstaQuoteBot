@@ -60,6 +60,9 @@ class BasicCaption:
 
     @staticmethod
     def __hashtags():
+        """
+        Returns a str of hashtags
+        """
         return '#quote #quoteoftheday #quotes #quotestagram #quotesindonesia #quotestoliveby #quotesaboutlife ' \
                '#quotesdaily #lovequotes #motivationalquotes #quotesoftheday #quoted #quotesgalau ' \
                '#inspirationalquotes #quotestags #quotesandsayings #quotescinta #quoteskeren #quotestoinspire '

@@ -25,6 +25,14 @@ class AddFromApi:
     # Sends the request
     @staticmethod
     def send_request(req, url, method, headers):
+        """
+        This function returns a api response
+        :param req: requests instance
+        :param url: api url
+        :param method: api method
+        :param headers: api headers
+        :return: requests instance
+        """
         if not (method == 'get' or method == 'post'):
             raise ValueError('method should only be `get` or `post` ')
 
