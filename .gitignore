@@ -15,6 +15,7 @@ test1.py
 
 # TinyDB
 quotes_data.json
+user_data.json
 
 # Secret Information
 **/.env
