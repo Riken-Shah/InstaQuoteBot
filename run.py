@@ -1,6 +1,8 @@
 import os
 import logging
-from Scripts.create_post import CreatePost
+from Scripts.Helpers.create_post import CreatePost
+from Scripts.Helpers.greetings import greeting_to_new_users
+from Scripts.Instagram.InstagramAPI import InstagramAPIBot
 import schedule
 import argparse
 
@@ -25,10 +27,12 @@ if __name__ == '__main__':
         post = CreatePost(testing=args.testing)
     except Exception as e:
         logging.exception('Error in CreatePost instance')
+
+    instagram_api_bot = InstagramAPIBot(testing=args.testing)
     if post:
         path = args.post_img_path
         schedule.every(6).hours.do(post.create, path)
-        post.create(path)
+        schedule.every(3).hours.do(greeting_to_new_users, post.post_bot, instagram_api_bot)
 
         while True:
             schedule.run_pending()
