@@ -31,8 +31,12 @@ if __name__ == '__main__':
     instagram_api_bot = InstagramAPIBot(testing=args.testing)
     if post:
         path = args.post_img_path
+        # Post a new quote
         schedule.every(6).hours.do(post.create, path)
+        # Greet the new users
         schedule.every(3).hours.do(greeting_to_new_users, post.post_bot, instagram_api_bot)
+        # Like Every Comment
+        schedule.every(8).hours.do(instagram_api_bot.process_comment)
 
         while True:
             schedule.run_pending()
