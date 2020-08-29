@@ -18,8 +18,8 @@ class Bot:
 
         driver = webdriver.Chrome(executable_path=os.getenv('chrome_exec_path'),
                                   options=options)
-        url = "https://www.instagram.com"
-        driver.get(url)
+        self.main_url = "https://www.instagram.com"
+        driver.get(self.main_url)
         sleep(3)
         if testing:
             self.driver = driver
@@ -28,7 +28,7 @@ class Bot:
         try:
             self.__login()
         except NoSuchElementException:
-            self.__driver.get(url)
+            self.__driver.get(self.main_url)
             sleep(60)
 
         sleep(6)
@@ -53,9 +53,12 @@ class Bot:
         """
         Post a image on instagram
         """
+        self.__driver.get(self.main_url)
+        sleep(10)
         self.img_path = img_path
         self.caption = caption
         self.close_notification()
+        sleep(2)
         self.close_add_to_home()
         sleep(2)
         self.__upload_a_file('//*[@id="react-root"]/section/nav[2]/div/div/form/input')
@@ -81,6 +84,38 @@ class Bot:
         sleep(4)
         self.__driver.find_element_by_xpath("//span[contains(text(),'Add to your story')]").click()
         sleep(5)
+
+    def first_time_following(self, username_list):
+        """
+        This function sends a message for first time following our page
+        """
+        self.close_notification()
+        sleep(2)
+        self.close_add_to_home()
+        sleep(2)
+        self.close_reactivated()
+        sleep(2)
+        self.__driver.get('https://www.instagram.com/direct/new/')
+        sleep(5)
+        for u_name in username_list:
+            message = f"Hey @{u_name} 👋. Thanks a lot for following us.\n " \
+                      f"I'll make sure to post daily powerful💪 quotes\n" \
+                      f"Till then Be positive ✚ and\n" \
+                      f"Keep Hustling 🏋️ ..."
+            self.__driver.find_element_by_css_selector('input[name=queryBox]').send_keys(u_name)
+            sleep(5)
+            self.__driver.find_element_by_xpath(f'//div[contains(text(), "{u_name}")]').click()
+            sleep(3)
+            self.__driver.find_element_by_xpath('//div[contains(text(), "Next")]').click()
+            sleep(3)
+            subprocess.run("pbcopy", universal_newlines=True, input=message)
+            sleep(1)
+            self.__driver.find_element_by_css_selector('textarea').send_keys(Keys.SHIFT, Keys.INSERT)
+            sleep(2)
+            self.__driver.find_element_by_xpath('//button[contains(text(), "Send")]').click()
+            sleep(3)
+            self.__driver.back()
+            sleep(2)
 
     def __login(self):
         """
