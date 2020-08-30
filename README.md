@@ -14,11 +14,12 @@ git clone https://github.com/Riken-Shah/InstaQuoteBot.git
 ```
 
 ## Step 2
-Change your directory to project
+Change your directory 
 ```bash
 cd InstaQuoteBot
 ```
-Download the dependices
+## Step 3
+Download the dependices\
 For Windows User
 ```python
 pip -r install ./requirements.txt 
@@ -32,12 +33,12 @@ For Ubuntu User
 pip3 install -r ./requirements.txt 
 ```
 
-## Step 3
+## Step 4
 
 Install chromedriver ([link](https://chromedriver.storage.googleapis.com/index.html?path=84.0.4147.30/))\
 and **copy it's path**.
 
-## Step 4
+## Step 5
 
 Add the .env to your project directory\
 Follow the instruction on this [file](.envTest)\
