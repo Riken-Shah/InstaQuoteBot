@@ -3,6 +3,8 @@ from mediawiki.exceptions import PageError
 import random
 from requests.exceptions import ReadTimeout
 from requests.exceptions import ConnectionError
+from PyDictionary import PyDictionary
+from random import shuffle
 
 
 class BasicCaption:
@@ -13,13 +15,14 @@ class BasicCaption:
         self.__max_chars = 2200
         self.__hashtag_limit = 30
         self.__username_limit = 30
+        self.dictionary = PyDictionary()
 
     def create_caption(self, author):
         """
         Creates a caption
         """
         self.author = author
-        caption = f' 👉 A Beautiful Quote By #{self.author.title().replace(" ", "")} 👈. '
+        caption = f' 👉 A {self.__get_random_adjective()} Quote By #{self.author.title().replace(" ", "")} 👈. '
         caption += f'Follow my 👉 @{self.page_name} 👈 for more inspirational quote 🙇‍ like this.️'.strip()
         if author != 'Anonymous':
             try:
@@ -47,6 +50,14 @@ class BasicCaption:
             caption += self.__add_space(3)
             caption += self.__hashtags()
         return caption
+
+    def __get_random_adjective(self):
+        basic_words = ['beautiful', 'amazing', 'wonderful']
+        shuffle(basic_words)
+        random_base_word = basic_words[0]
+        synonyms = self.dictionary.synonym(random_base_word)
+        shuffle(synonyms)
+        return synonyms[0]
 
     @staticmethod
     def __add_space(lines: int, char='.'):
