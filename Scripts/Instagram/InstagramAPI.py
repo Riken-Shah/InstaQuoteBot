@@ -13,7 +13,8 @@ class InstagramAPIBot:
 
         self.__api = Client(self.__username, self.__password)
         self.__max_comments_to_reply = max_comments_to_reply
-        self.__user_db = TinyDB('user_data.json')
+        self.__user_db = TinyDB('user_database.json')
+        self.testing = testing
 
         if testing:
             self.api = self.__api
@@ -68,7 +69,10 @@ class InstagramAPIBot:
         """
         Likes Every Comment from all posts
         """
-        posts = self.__get_self_feed()
+        if self.testing:
+            posts = [self.__api.username_feed('instagram')['items'][0]]
+        else:
+            posts = self.__get_self_feed()
         for post in posts:
             comments = self.__get_comments(post['pk'])
             for comment in comments:
