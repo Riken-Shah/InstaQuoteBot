@@ -77,7 +77,7 @@ class InstagramAPIBot:
             comments = self.__get_comments(post['pk'])
             for comment in comments:
                 if not comment['has_liked_comment']:
-                    self.api.comment_like(comment['pk'])
+                    self.__api.comment_like(comment['pk'])
 
     def get_new_user_followers(self):
         """
