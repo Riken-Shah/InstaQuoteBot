@@ -2,8 +2,6 @@ import os
 from time import sleep
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.keys import Keys
-import subprocess
 
 
 class Bot:
@@ -108,10 +106,8 @@ class Bot:
             sleep(3)
             self.__driver.find_element_by_xpath('//div[contains(text(), "Next")]').click()
             sleep(3)
-            subprocess.run("pbcopy", universal_newlines=True, input=message)
-            sleep(1)
-            self.__driver.find_element_by_css_selector('textarea').send_keys(Keys.SHIFT, Keys.INSERT)
-            sleep(2)
+            self.send_emoji_text(self.__driver.find_element_by_css_selector('textarea'), message)
+            sleep(3)
             self.__driver.find_element_by_xpath('//button[contains(text(), "Send")]').click()
             sleep(3)
             self.__driver.back()
@@ -188,15 +184,22 @@ class Bot:
         self.__driver.find_element_by_xpath("//button[contains(text(),'Next')]").click()
         sleep(1.5)
         caption_field = self.__driver.find_element_by_xpath("//textarea[@aria-label='Write a caption…']")
-        caption_field.click()
-        # Copy the Caption
-        subprocess.run("pbcopy", universal_newlines=True, input=self.caption)
-        sleep(3)
-        # Past the caption
-        caption_field.send_keys(Keys.SHIFT, Keys.INSERT)
+        sleep(1.5)
+        self.send_emoji_text(caption_field, self.caption)
         sleep(3)
         # Share Button
         self.__driver.find_element_by_xpath("//button[contains(text(),'Share')]").click()
+
+    def send_emoji_text(self, elem, text):
+        # Activating Element
+        elem.send_keys(' ')
+        js_add_text_to_input = """
+          var elm = arguments[0], txt = arguments[1];
+          elm.value += txt;
+          elm.dispatchEvent(new Event('change'));
+          """
+        self.__driver.execute_script(js_add_text_to_input, elem, text)
+        elem.send_keys(' ')
 
     def exit(self):
         """

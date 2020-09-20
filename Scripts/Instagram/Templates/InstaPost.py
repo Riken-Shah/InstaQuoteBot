@@ -13,7 +13,7 @@ class InstaPost(QuotesDatabase):
     def __init__(self, *args, **kwargs):
         # Default Instagram Post Size
         self._size = (1080, 1080)
-        self.default_font = '/Library/Fonts/AppleMyungjo.ttf'
+        self.default_font = 'Fonts/Ovo-Regular.ttf'
         self.__font_size_smallest = 30
         self.__padding_top_bottom_smallest = 20
 

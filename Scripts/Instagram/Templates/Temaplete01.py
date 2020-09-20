@@ -28,7 +28,7 @@ class Template(InstaPost):
         text_box = (self.__get_percentage_of_size(0), (self._size[0] - margin_bottom - 50, self._size[1]))
         did_write = self.write_text(img, text_box, self.quote, font_color=font_color, top_bottom_padding=50,
                                     font_size=200,
-                                    font_path='/Library/Fonts/Ovo-Regular.ttf', max_top_bottom_padding=0)
+                                    font_path='Fonts/Ovo-Regular.ttf', max_top_bottom_padding=0)
         if not did_write:
             return False
 
@@ -41,7 +41,7 @@ class Template(InstaPost):
         author_text = ((0, self._size[1] - margin_bottom / 100 * 70), (self._size[0], self._size[1]))
         did_write = self.write_text(img, author_text,
                                    text=self.author, font_size=50, font_color=font_color,
-                                    font_path='/Library/Fonts/Ovo-Regular.otf',
+                                    font_path='Fonts/Ovo-Regular.otf',
                                     need_checking=False)
         if not did_write:
             return False

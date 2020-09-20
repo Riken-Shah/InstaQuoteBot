@@ -1,14 +1,11 @@
 from Scripts.Database.database import Database
 from tinydb import TinyDB, Query
 from datetime import datetime
-import os
 
 
 class QuotesDatabase(Database):
     def __init__(self, *args, **kwargs):
-        db_path = os.getenv('tiny_db_path_to_db')
-        if not db_path:
-            raise ValueError('DB path not found')
+        db_path = 'quotes_database.json'
         self.db = TinyDB(db_path)
         # super().__init__(self.db_path)
         self.query = Query()

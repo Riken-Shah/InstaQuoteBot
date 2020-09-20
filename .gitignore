@@ -14,8 +14,8 @@ test1.py
 **/__pycache__/
 
 # TinyDB
-quotes_data.json
-user_data.json
+quotes_database.json
+user_database.json
 
 # Secret Information
 **/.env

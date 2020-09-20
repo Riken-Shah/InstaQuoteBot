@@ -30,12 +30,9 @@ urls = [
 ]
 
 # Setting up db file path
-file_path = os.getenv('tiny_db_path_to_db')
-if file_path:
-    if not os.path.exists(file_path):
-        # Setting up the Database
-        open(file_path, 'w')
-        for url in urls:
-            QuotesTinyDb(**url)
-else:
-    raise ValueError(' `tiny_db_path_to_db` variable not found in .env file')
+file_path = 'quotes_database.json'
+if not os.path.exists(file_path):
+    # Setting up the Database
+    open(file_path, 'w')
+    for url in urls:
+        QuotesTinyDb(**url)
