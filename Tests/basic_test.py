@@ -2,10 +2,18 @@ import Tests
 from Scripts.Helpers.create_post import CreatePost
 from Scripts.Instagram.InstagramAPI import InstagramAPIBot
 import os
+import argparse
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Commands')
+
+    parser.add_argument('-ch', '--chromeHead', type=bool, help='You chrome instance should not be headless',
+                        default=False)
+
+    args = parser.parse_args()
+
     test_post_path = os.path.abspath(os.getcwd() + 'test.png')
-    post = CreatePost(testing=True)
+    post = CreatePost(testing=args.chromeHead)
     api_bot = InstagramAPIBot(testing=True)
 
     # Post Test
