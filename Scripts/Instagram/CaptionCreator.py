@@ -5,12 +5,12 @@ from requests.exceptions import ReadTimeout
 from requests.exceptions import ConnectionError
 from PyDictionary import PyDictionary
 from random import shuffle
-
+import os
 
 class BasicCaption:
-    def __init__(self, page_name='bot.quote'):
+    def __init__(self):
         self.author = None
-        self.page_name = page_name
+        self.page_name = os.getenv('username')
         self.wikipedia = MediaWiki(timeout=20)
         self.__max_chars = 2200
         self.__hashtag_limit = 30
