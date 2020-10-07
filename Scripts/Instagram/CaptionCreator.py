@@ -23,7 +23,7 @@ class BasicCaption:
         """
         self.author = author
         caption = f' 👉 A {self.__get_random_adjective()} Quote By #{self.author.title().replace(" ", "")} 👈. '
-        caption += f'Follow my 👉 @{self.page_name} 👈 for more inspirational quote 🙇‍ like this.️'.strip()
+        caption += f'Follow my page 👉 @{self.page_name} 👈 for more inspirational quote 🙇‍ like this.️'.strip()
         if author != 'Anonymous':
             try:
                 page = self.__get_request()
