@@ -1,4 +1,3 @@
-import Tests
 from Scripts.Helpers.create_post import CreatePost
 from Scripts.Instagram.InstagramAPI import InstagramAPIBot
 import os
