@@ -6,6 +6,30 @@ from Scripts.Instagram.InstagramAPI import InstagramAPIBot
 import schedule
 import argparse
 
+def main(args, count=0):
+    post = None
+    try:
+        post = CreatePost(testing=args.testing)
+    except Exception as e:
+        logging.exception('Error in CreatePost instance')
+
+    instagram_api_bot = InstagramAPIBot(testing=args.testing)
+    if post or count == 0:
+        path = args.post_img_path
+        # Post a new quote
+        schedule.every(6).hours.do(post.create, path)
+        # Greet the new users
+        schedule.every(3).hours.do(greeting_to_new_users, post.post_bot, instagram_api_bot)
+        # Like Every Comment
+        schedule.every(8).hours.do(instagram_api_bot.process_comment)
+        count += 1
+        while True:
+            try:
+                schedule.run_pending()
+            except Exception as e:
+                logging.error("Error occurred")
+                logging.error(e)
+                main(args, count)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Arguments you can use...')
@@ -22,21 +46,5 @@ if __name__ == '__main__':
                         format='%(asctime)s - %(name)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
     logging.info('CREATED LOGFILE')
 
-    post = None
-    try:
-        post = CreatePost(testing=args.testing)
-    except Exception as e:
-        logging.exception('Error in CreatePost instance')
+    main(args)
 
-    instagram_api_bot = InstagramAPIBot(testing=args.testing)
-    if post:
-        path = args.post_img_path
-        # Post a new quote
-        schedule.every(6).hours.do(post.create, path)
-        # Greet the new users
-        schedule.every(3).hours.do(greeting_to_new_users, post.post_bot, instagram_api_bot)
-        # Like Every Comment
-        schedule.every(8).hours.do(instagram_api_bot.process_comment)
-
-        while True:
-            schedule.run_pending()
