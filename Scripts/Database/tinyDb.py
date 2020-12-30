@@ -1,13 +1,20 @@
 from Scripts.Database.database import Database
 from tinydb import TinyDB, Query
 from datetime import datetime
+import os
+import logging
 
 
 class QuotesDatabase(Database):
     def __init__(self, *args, **kwargs):
+        super().__init__()
         db_path = 'quotes_database.json'
+        if not os.path.exists(db_path):
+            # Create file if not present
+            logging.warning('No database file detected.')
+            open(db_path, 'w')
+            logging.info('Creating new database file.')
         self.db = TinyDB(db_path)
-        # super().__init__(self.db_path)
         self.query = Query()
         if 'for_test' in kwargs:
             self.test_mode = kwargs['for_test']
@@ -48,3 +55,6 @@ class QuotesDatabase(Database):
             self.db.update({'used_on_insta': not self.test_mode}, doc_ids=[quote.doc_id])
             return {'quote': quote['quote'], 'author': quote['author']}
         return False
+
+    def is_empty(self):
+        return len(self.db.all()) == 0

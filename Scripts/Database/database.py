@@ -1,3 +1,8 @@
+import json
+from Scripts.Helpers.common import send_request
+import logging
+
+
 class Database:
     """
     This class is basic template to integrate with the diffrent
@@ -36,3 +41,19 @@ class Database:
         """
         Overwrite this function to return a quote and the update it used_on_insta = True
         """
+
+    def is_empty(self):
+        """
+        Overwrite this function to return a boolean value to determine if new db is empty or not
+        """
+
+    def add_from_api(self, quote_key='quote', author_key='author',  **kwargs):
+        """
+        Add data from APIs to database
+        """
+        response = send_request(**kwargs)
+        if str(response.status_code)[0] == '2':
+            self.add_list(json.loads(response.content), author_key=author_key, quote_key=quote_key)
+            logging.info(f'Data from {kwargs["url"]} is added successfully.')
+        else:
+            ConnectionError('API is not configured properly')

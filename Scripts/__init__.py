@@ -3,8 +3,7 @@
  -> Add more api to increase the size of our db
  -> Add more methods to increase the size of our db
 """
-import os
-from Scripts.AddQuotes.tinydb_integration import QuotesTinyDb
+from Scripts.Database.tinyDb import QuotesDatabase
 from dotenv import load_dotenv
 
 """
@@ -26,13 +25,12 @@ urls = [
     {
         'url': 'https://type.fit/api/quotes',
         'quote_key': 'text',
+        'author_key': 'author',
+        'method': 'get',
     }
 ]
-
-# Setting up db file path
-file_path = 'quotes_database.json'
-if not os.path.exists(file_path):
-    # Setting up the Database
-    open(file_path, 'w')
+# Assign it your preferred database
+db = QuotesDatabase()
+if db.is_empty():
     for url in urls:
-        QuotesTinyDb(**url)
+        db.add_from_api(**url)
