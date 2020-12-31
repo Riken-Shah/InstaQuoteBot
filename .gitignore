@@ -1,27 +1,19 @@
 # Virtual env
-/env/
+instabot/**
 
-# Test
-test1.py
-
-# Idea
+# Pycharm
 .idea/*
-
-# Service Key
-/intagram-bot-firebase*.json
 
 # Cache
 **/__pycache__/
+**/__init__.pyc
 
 # TinyDB
 quotes_database.json
 user_database.json
 
 # Secret Information
-**/.env
-
-# Insta Post Test
-/Scripts/Instagram/Test/**
+.env
 
 # VS Code
 /.vscode/**
@@ -31,4 +23,7 @@ app.log
 
 # Image Path
 post.png
+
+# Mac
+.DS_Store
 

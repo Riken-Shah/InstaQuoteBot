@@ -7,6 +7,7 @@ from PyDictionary import PyDictionary
 from random import shuffle
 import os
 
+
 class BasicCaption:
     def __init__(self):
         self.author = None
@@ -24,34 +25,38 @@ class BasicCaption:
         self.author = author
         caption = f' 👉 A {self.__get_random_adjective()} Quote By #{self.author.title().replace(" ", "")} 👈. '
         caption += f'Follow my page 👉 @{self.page_name} 👈 for more inspirational quote 🙇‍ like this.️'.strip()
+        page = None
         if author != 'Anonymous':
             try:
                 page = self.__get_request()
             except ReadTimeout:
+                # Try again
                 try:
                     page = self.__get_request()
                 except ReadTimeout:
-                    caption += self.__add_space(3)
-                    return caption + self.__hashtags()
+                    pass
             if not page:
-                caption += self.__add_space(3)
+                caption += self.__add_new_line(3)
                 return caption + self.__hashtags()
             # Adding Call to action
             caption += self.__call_to_action()
             # Adding Space
-            caption += self.__add_space(2)
+            caption += self.__add_new_line(2)
             # Adding author summary
             caption += page.summarize(chars=400)
             # Adding space
-            caption += self.__add_space(4)
+            caption += self.__add_new_line(4)
             # Adding Wikipedia link
             caption += f' Read more on {page.url}'
             # Adding space
-            caption += self.__add_space(3)
+            caption += self.__add_new_line(3)
             caption += self.__hashtags()
         return caption
 
     def __get_random_adjective(self):
+        """
+        Returns a random adjective
+        """
         basic_words = ['beautiful', 'amazing', 'wonderful']
         shuffle(basic_words)
         random_base_word = basic_words[0]
@@ -60,9 +65,9 @@ class BasicCaption:
         return synonyms[0]
 
     @staticmethod
-    def __add_space(lines: int, char='.'):
+    def __add_new_line(lines, char='.'):
         """
-        Returns a string with space
+        Returns a string with new line
         """
         space = '\n'
         for _ in range(lines):

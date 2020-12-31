@@ -31,7 +31,7 @@ class InstagramAPIBot:
             feed += response['items']
         return feed
 
-    def __get_comments(self, media_id: str):
+    def __get_comments(self, media_id):
         """
         Returns the comments from the post
         max: self.__max_comments_to_reply
@@ -50,7 +50,7 @@ class InstagramAPIBot:
 
     def __get_all_followers(self):
         """
-        Returns a all followers
+        Returns list of all followers
         """
         users = []
         response = self.__api.user_followers(user_id=self.__api.authenticated_user_id,
