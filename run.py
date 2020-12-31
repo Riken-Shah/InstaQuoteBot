@@ -1,50 +1,55 @@
 import os
 import logging
-from Scripts.Helpers.create_post import CreatePost
-from Scripts.Helpers.greetings import greeting_to_new_users
+from Scripts.Helpers.instagram import greeting_to_new_users, post_on_instagram
 from Scripts.Instagram.InstagramAPI import InstagramAPIBot
+from Scripts.Instagram.Templates.Temaplete01 import Template as SimpleDesign
+from Scripts.Instagram.CaptionCreator import BasicCaption
+from Scripts.Instagram.Bot import Bot
+
 import schedule
 import argparse
 
-def main(args, count=0):
-    post = None
-    try:
-        post = CreatePost(testing=args.testing)
-    except Exception as e:
-        logging.exception('Error in CreatePost instance')
 
+def main():
+    # Creating a template instance
+    template = SimpleDesign()
+    # Creating a caption instance
+    caption_template = BasicCaption()
+    # Creating a bot instance
+    selenium_bot = Bot(testing=args.testing)
+    # Creating instagram API instance
     instagram_api_bot = InstagramAPIBot(testing=args.testing)
-    if post or count == 0:
-        path = args.post_img_path
-        # Post a new quote
-        schedule.every(6).hours.do(post.create, path)
-        # Greet the new users
-        schedule.every(3).hours.do(greeting_to_new_users, post.post_bot, instagram_api_bot)
-        # Like Every Comment
-        schedule.every(8).hours.do(instagram_api_bot.process_comment)
-        count += 1
-        while True:
-            try:
-                schedule.run_pending()
-            except Exception as e:
-                logging.error("Error occurred")
-                logging.error(e)
-                main(args, count)
+
+    # Post a new quote
+    schedule.every(6).seconds.do(post_on_instagram, selenium_bot, template, caption_template,
+                                 img_path=args.post_img_path)
+    # Greet the new users
+    schedule.every(3).seconds.do(greeting_to_new_users, selenium_bot, instagram_api_bot)
+    # Like Every Comment
+    schedule.every(8).seconds.do(instagram_api_bot.process_comment)
+
+    while True:
+        schedule.run_pending()
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Arguments you can use...')
 
-    parser.add_argument('-t', '--testing', type=bool, help='Make it true if you are using it in Testing mode',
+    parser.add_argument('-t', '--testing', type=bool, help='True if you are using it in Testing mode',
                         default=False)
     parser.add_argument('-lf', '--logfile', type=str, help='Logfile Path', default='app.log')
     parser.add_argument('-pp', '--post-img-path', type=str, help='Post image path',
                         default=f'{os.path.abspath(os.getcwd())}/post.png')
+    parser.add_argument('-r', '--max-retry', type=int, help='Max retry count', default=10)
 
     args = parser.parse_args()
     # Setting Up a LogFile
     logging.basicConfig(level=logging.INFO, filename=args.logfile, filemode='w',
                         format='%(asctime)s - %(name)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
     logging.info('CREATED LOGFILE')
-
-    main(args)
-
+    while args.max_retry >= 0:
+        try:
+            main()
+        except Exception:
+            logging.exception('Something went wrong.')
+        args.max_retry -= 1
