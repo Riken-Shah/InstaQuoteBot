@@ -31,6 +31,14 @@ class InstagramAPIBot:
             feed += response['items']
         return feed
 
+    def get_last_post(self):
+        """
+        Returns last post
+        """
+        response = self.__api.self_feed()
+        if response['items']:
+            return response['items'][0]
+
     def __get_comments(self, media_id):
         """
         Returns the comments from the post
@@ -69,15 +77,13 @@ class InstagramAPIBot:
         """
         Likes Every Comment from all posts
         """
-        if self.testing:
-            posts = [self.__api.username_feed('instagram')['items'][0]]
-        else:
-            posts = self.__get_self_feed()
+        posts = self.__get_self_feed()
         for post in posts:
             comments = self.__get_comments(post['pk'])
             for comment in comments:
                 if not comment['has_liked_comment']:
                     self.__api.comment_like(comment['pk'])
+        return True
 
     def get_new_user_followers(self):
         """
