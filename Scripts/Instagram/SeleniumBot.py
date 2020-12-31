@@ -6,6 +6,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 class SeleniumBot:
     def __init__(self, testing=False):
+        self.username, self.password = self.__get_credentials()
         options = webdriver.ChromeOptions()
         if not testing:
             options.add_argument("--headless")
@@ -16,7 +17,7 @@ class SeleniumBot:
                                   options=options)
 
         # Going to instagram
-        self.main_url = "https://www.instagram.com"
+        self.main_url = "https://www.instagram.com/"
         driver.get(self.main_url)
         sleep(20)
 
@@ -43,14 +44,13 @@ class SeleniumBot:
         """
         Logging in to the account
         """
-        username, password = self.__get_credentials()
         login_button = self.__driver.find_element_by_xpath("//button[contains(text(),'Log In')]")
         login_button.click()
         sleep(5)
         username_input = self.__driver.find_element_by_xpath("//input[@name='username']")
-        username_input.send_keys(username)
+        username_input.send_keys(self.username)
         password_input = self.__driver.find_element_by_xpath("//input[@name='password']")
-        password_input.send_keys(password)
+        password_input.send_keys(self.password)
         password_input.submit()
         sleep(10)
 
@@ -101,7 +101,7 @@ class SeleniumBot:
         """
         This function greets first time following user
         :param username_list: List of usernames
-        :return: None
+        :return: Boolean
         """
         # Closing all popups
         self.close_all_popups()
@@ -111,6 +111,7 @@ class SeleniumBot:
                       f"Till then Be positive ✚ and\n" \
                       f"Keep Hustling 🏋️ ..."
             self.dm(username, message)
+        return True
 
     def dm(self, username, message):
         """
@@ -208,6 +209,24 @@ class SeleniumBot:
         self.__driver.execute_script(js_add_text_to_input, elem, text)
         elem.send_keys(' ')
         sleep(3)
+
+    def comment(self, code, msg):
+        """
+        Comment on post
+        :param code: Instagram Post Code
+        :param msg: Comment text
+        :return: Boolean
+        """
+        # Go to post comment section
+        self.__driver.get(f'{self.main_url}p/{code}/comments')
+        sleep(10)
+        # Set text in comment
+        self.__send_text_with_emoji(
+            self.__driver.find_element_by_css_selector("textarea[placeholder='Add a comment…']"),
+            msg)
+        # Post comment
+        self.driver.find_element_by_xpath("//button[contains(text(),'Post')]").click()
+        return True
 
     def exit(self):
         """
