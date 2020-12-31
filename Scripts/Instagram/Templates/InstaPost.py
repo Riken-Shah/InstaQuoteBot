@@ -5,9 +5,10 @@ from Scripts.Database.tinyDb import QuotesDatabase
 class InstaPost(QuotesDatabase):
     """
     *This class expects an database object
+    (You can pass your custom db to it)
 
-    This class has a base class which has base function to
-    create instagram post like writing responsive text, generating
+    You can use this class as a base class when you are writing a new template for your instagram post
+    It has feature like like writing responsive text, generating
     quotes and author.
     """
     def __init__(self, *args, **kwargs):
@@ -24,17 +25,17 @@ class InstaPost(QuotesDatabase):
         if not self.quote or not self.author:
             raise ValueError('Quote or Author Not Found')
 
-    # Fetch New Quotes and Authors
     def fetch_new(self):
+        """
+        Set Quote and Author
+        """
         res = self.fetch_quote()
         if res:
             self.quote = res['quote']
             self.author = res['author'] or 'Anonymous'
-        return False
 
-    # Clean the Text
     @staticmethod
-    def _clean_quote(text, max_char_in_sentence: int = 50):
+    def _clean_quote(text, max_char_in_sentence=50):
         """
         The functions returns the text in phrase to avoid text overflowing
         :param max_char_in_sentence: Max number of chars in a sentence
@@ -51,15 +52,28 @@ class InstaPost(QuotesDatabase):
                     clean_text.append('')
                 clean_text[count] += word.lstrip()
                 word = ''
-        # Cleaning
+        # Cleaning (removing empty strings)
         for text_block in clean_text:
             if not text_block:
                 del clean_text[clean_text.index(text_block)]
         return clean_text
 
-    # Set the text in Image
     def __set_text_in_image(self, img, x: int, y: int, texts: list, side_padding=50, top_bottom_padding=80,
                             font_path=None, font_size=50, font_color=(0, 0, 0), max_top_bottom_padding=None):
+        """
+        This function set text in image
+        :param img: Expects a PIL image instance
+        :param x: X-axis you want to start writing from
+        :param y: Y-axis you want to start writing from
+        :param texts: List of strings (Make sure each str does not exceeds max_chars in line)
+        :param side_padding: Left Right Padding
+        :param top_bottom_padding: Space between each line
+        :param font_path: Path to the font
+        :param font_size: Font size
+        :param font_color: Font color
+        :param max_top_bottom_padding: Max top bottom padding
+        :return: None
+        """
         if not font_path:
             font_path = self.default_font
         fnt = ImageFont.truetype(font_path, font_size)
@@ -77,6 +91,19 @@ class InstaPost(QuotesDatabase):
 
     def write_text(self, img, xy, text, font_size=70, top_bottom_padding=30, side_padding=50, need_checking=True,
                    **kwargs):
+        """
+        This function set the test in image, it will calculate max number of lines needed, max number character allowed
+        each line.
+        :param img: Expects a PIL image instance
+        :param xy: Expects image dimensions
+        :param text: Expects image dimensions
+        :param font_size: Expects image dimensions
+        :param top_bottom_padding: Space between each line
+        :param side_padding: Left Right Padding
+        :param need_checking: If it is False then value like max_lines, max_chars will not
+        automatically set
+        :return: None
+        """
         # Get the height and width of the text box
         height, width = self.__get_width_and_height(xy)
         max_chars = None
@@ -96,7 +123,6 @@ class InstaPost(QuotesDatabase):
             if font_size >= self.__font_size_smallest:
                 font_size -= 5
             else:
-                # break
                 return False
 
             if top_bottom_padding >= self.__padding_top_bottom_smallest:
@@ -112,11 +138,17 @@ class InstaPost(QuotesDatabase):
         return True
 
     def __get_max_lines(self, text, height, font_size, top_bottom_padding):
+        """
+        Calculates and return max number of lines a quote will need
+        """
         font = ImageFont.truetype(self.default_font, size=font_size)
         _, f_height = font.getsize(text)
         return int(height / (f_height + top_bottom_padding))
 
     def __get_max_chars(self, text, font_size, max_width, max_chars=50):
+        """
+        Calculates and return max number of character in lines a quote will need
+        """
         max_width -= 50
         while True:
             text = text[:max_chars]
