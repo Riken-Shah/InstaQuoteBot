@@ -4,7 +4,7 @@ from Scripts.Helpers.instagram import greeting_to_new_users, post_on_instagram
 from Scripts.Instagram.InstagramAPI import InstagramAPIBot
 from Scripts.Instagram.Templates.Temaplete01 import Template as SimpleDesign
 from Scripts.Instagram.CaptionCreator import BasicCaption
-from Scripts.Instagram.Bot import Bot
+from Scripts.Instagram.SeleniumBot import SeleniumBot
 
 import schedule
 import argparse
@@ -16,7 +16,7 @@ def main():
     # Creating a caption instance
     caption_template = BasicCaption()
     # Creating a bot instance
-    selenium_bot = Bot(testing=args.testing)
+    selenium_bot = SeleniumBot(testing=args.testing)
     # Creating instagram API instance
     instagram_api_bot = InstagramAPIBot(testing=args.testing)
 

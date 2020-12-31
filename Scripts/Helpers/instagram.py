@@ -33,5 +33,5 @@ def greeting_to_new_users(selenium_bot, api_bot):
     new_users = api_bot.get_new_user_followers()
     new_users = list(map(lambda user: user['username'], new_users))
     if new_users:
-        selenium_bot.first_time_following(new_users)
+        selenium_bot.greet_new_users(new_users)
 
