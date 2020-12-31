@@ -21,12 +21,12 @@ def main():
     instagram_api_bot = InstagramAPIBot(testing=args.testing)
 
     # Post a new quote
-    schedule.every(6).seconds.do(post_on_instagram, selenium_bot, template, caption_template,
+    schedule.every(6).hours.do(post_on_instagram, selenium_bot, template, caption_template,
                                  img_path=args.post_img_path)
     # Greet the new users
-    schedule.every(3).seconds.do(greeting_to_new_users, selenium_bot, instagram_api_bot)
+    schedule.every(3).hours.do(greeting_to_new_users, selenium_bot, instagram_api_bot)
     # Like Every Comment
-    schedule.every(8).seconds.do(instagram_api_bot.process_comment)
+    schedule.every(8).hours.do(instagram_api_bot.process_comment)
 
     while True:
         schedule.run_pending()
