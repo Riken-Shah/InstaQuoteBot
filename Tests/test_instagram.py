@@ -2,10 +2,10 @@ import unittest
 import os
 
 # Changing working directory to root
-if not os.path.exists('Scripts'):
+if not os.path.exists('Scripts') and os.path.exists('test_instagram.py'):
     os.chdir('..')
 
-from Scripts.Helpers.instagram import post_on_instagram, greeting_to_new_users
+from Scripts.Helpers.instagram import post_on_instagram
 from Scripts.Instagram.InstagramAPI import InstagramAPIBot
 from Scripts.Instagram.Templates.Temaplete01 import Template as SimpleDesign
 from Scripts.Instagram.CaptionCreator import BasicCaption
@@ -27,6 +27,10 @@ class TestInstagram(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.selenium_bot.exit()
+
+    def test_generate_image(self):
+        response = self.template.generate_post()
+        self.assertTrue(response)
 
     def test_post_on_instagram(self):
         response = post_on_instagram(self.selenium_bot, self.template, self.caption_template)
