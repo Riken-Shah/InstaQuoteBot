@@ -10,7 +10,7 @@ class SeleniumBot:
         options = webdriver.ChromeOptions()
         if not testing:
             options.add_argument("--headless")
-        options.add_experimental_option("detach", True)
+            options.add_experimental_option("detach", True)
         options.add_experimental_option("mobileEmulation", {"deviceName": "Pixel 2"})
 
         driver = webdriver.Chrome(executable_path=os.getenv('chrome_exec_path'),
@@ -91,7 +91,7 @@ class SeleniumBot:
         :return: None
         """
         self.close_all_popups()
-        self.__driver.find_element_by_css_selector("svg[aria-label='New Story']").click()
+        self.__driver.find_element_by_xpath("//svg[@aria-label='New Story']").click()
         sleep(3)
         self.__upload_a_file('//*[@id="react-root"]/section/nav[1]/div/div/form/input', img_path)
         self.__driver.find_element_by_xpath("//span[contains(text(),'Add to your story')]").click()
@@ -124,7 +124,7 @@ class SeleniumBot:
         self.__driver.get('https://www.instagram.com/direct/new/')
         sleep(5)
         # Searching for user
-        self.__driver.find_element_by_css_selector('input[name=queryBox]').send_keys(username)
+        self.__driver.find_element_by_xpath('//input[@name="queryBox"]').send_keys(username)
         sleep(5)
         # Clicking on user
         self.__driver.find_element_by_xpath(f'//div[contains(text(), "{username}")]').click()
@@ -133,7 +133,7 @@ class SeleniumBot:
         self.__driver.find_element_by_xpath('//div[contains(text(), "Next")]').click()
         sleep(3)
         # Writing message
-        self.__send_text_with_emoji(self.__driver.find_element_by_css_selector('textarea'), message)
+        self.__send_text_with_emoji(self.__driver.find_element_by_xpath('//textarea'), message)
         # Sending message
         self.__driver.find_element_by_xpath('//button[contains(text(), "Send")]').click()
         sleep(3)
@@ -202,7 +202,7 @@ class SeleniumBot:
         # Activating Element
         elem.send_keys(' ')
         js_add_text_to_input = """
-          var elm = arguments[0], txt = arguments[1];
+          const elm = arguments[0], txt = arguments[1];
           elm.value += txt;
           elm.dispatchEvent(new Event('change'));
           """
@@ -222,7 +222,7 @@ class SeleniumBot:
         sleep(10)
         # Set text in comment
         self.__send_text_with_emoji(
-            self.__driver.find_element_by_css_selector("textarea[placeholder='Add a comment…']"),
+            self.__driver.find_element_by_xpath("//textarea[@placeholder='Add a comment…']"),
             msg)
         # Post comment
         self.driver.find_element_by_xpath("//button[contains(text(),'Post')]").click()
